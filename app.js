@@ -1,30 +1,32 @@
-import mysql from 'mysql2'
+import express from 'express'
+import {databaseResultsbossman, databaseLuzon} from './database.js'
 
-const pool = mysql.createPool({
-    host: 'ccscloud.dlsu.edu.ph',
-    user: 'mainManager',
-    port: '20048',
-    database: 'clustertest'
+const app = express()
+app.set("view engine", "ejs")
 
-}).promise()
+app.get("/", async (req, res) => { //homepage of the webapp
+    res.render("webapp.ejs")
+})
 
-async function databaseResults(){
-    const [rows]= await pool.query("SELECT * FROM bossmantable")
-    return rows
-}
+app.use(express.static("public"))
 
-async function createData(id, age){
-    const result = await pool.query(`
-    INSERT INTO bossmantable (idbossmantable, age)
-    VALUES (?, ?)`, [id, age])
-    return result.insertID
-}
+app.get("/bossman", async (req, res) => {// return of bossmantable
 
-let listOfTable = await databaseResults()
-console.log(listOfTable)
+    const results = await databaseResultsbossman()
+    res.render("webappbos.ejs", {results})
+})
 
-const newData =  await createData('391','122')
-console.log(newData)
+app.get("/Luzon", async (req, res) => {// return of bossmantable
 
-listOfTable = await databaseResults()
-console.log(listOfTable)
+    const results = await databaseLuzon()
+    res.render("webappLuzon.ejs", {results})
+})
+
+app.use((err, req, res, next) => {
+    console.error(err.stack)
+    res.status(500).send('Something is not working')
+})
+
+app.listen(20048,()=> {
+    console.log('Server running')
+})
