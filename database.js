@@ -18,11 +18,11 @@ export async function databaseLuzon(){
     return rows
 }
 
-//export async function createData(id, age){
- //   const result = await pool.query(`
- //   INSERT INTO bossmantable (idbossmantable, age)
- //   VALUES (?, ?)`, [id, age])
- //   return databaseResults()
-//}
+export async function createData(id, age){
+    const result = await pool.query(`
+    INSERT INTO bossmantable (idbossmantable, age)
+    VALUES (?, ?)`, [id, age])
+  return databaseResults()
+}
 const result = databaseLuzon()
 console.log(result)
