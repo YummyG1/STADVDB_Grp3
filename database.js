@@ -19,10 +19,16 @@ export async function databaseLuzon(){
 }
 
 export async function createData(id, age){
-    const result = await pool.query(`
-    INSERT INTO bossmantable (idbossmantable, age)
-    VALUES (?, ?)`, [id, age])
-  return databaseResults()
+    try {
+        const result = await pool.query(`
+            INSERT INTO bossmantable (idbossmantable, age)
+            VALUES (?, ?)`, [id, age]);
+            
+    } catch (error) {
+        // Handle any errors that might occur during the database query execution
+        console.error("Error in createData function:", error);
+        throw error; // Re-throw the error to be handled by the caller
+    }
 }
 const result = databaseLuzon()
 console.log(result)
