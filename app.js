@@ -1,5 +1,5 @@
 import express from 'express'
-import {databaseResultsbossman, databaseLuzon, createData} from './database.js'
+import {databaseResultsbossman, databaseLuzon, createDatabossman, createDataLuzon} from './database.js'
 
 const app = express()
 app.set("view engine", "ejs")
@@ -24,11 +24,11 @@ app.get("/Luzon", async (req, res) => {// return of luzon table
     res.render("webappLuzon.ejs", {results})
 })
 
-app.get("/addData", (req, res) => {
-    res.render("webappbosAdd"); // Assuming you have an EJS file named addData.ejs
+app.get("/bossmanAddData", (req, res) => {
+    res.render("webappbosAdd.ejs");
 });
 
-app.post("/addData", async (req, res) => {
+app.post("/bossmanAddData", async (req, res) => {
     try {
         const id = req.body.id;
         const age = req.body.age;
@@ -36,10 +36,41 @@ app.post("/addData", async (req, res) => {
         // Validate and sanitize input data if necessary
 
         // Call createData function to insert data into the database
-        await createData(id, age);
+        await createDatabossman(id, age);
 
         // Redirect to a page showing the data (change "/bossman" to the appropriate route)
         res.redirect("/bossman"); 
+    }catch (error) {
+            // Handle specific database errors
+            if (error.code === 'ER_DUP_ENTRY') {
+                // Handle duplicate entry error
+                console.error("Duplicate entry error:", error);
+                res.status(400).send("Error: Duplicate entry. This ID already exists.");    
+            } else {
+                // Handle other errors
+                console.error("Error occurred:", error);
+                res.status(500).send("Internal server error");
+            }
+        }
+});
+
+app.get("/LuzonAddData", (req, res) => {
+    res.render("webappLuzonAdd.ejs");
+});
+
+app.post("/LuzonAddData", async (req, res) => {
+    try {
+        const id = req.body.id;
+        const city = req.body.city;
+        const province = req.body.province;
+
+        // Validate and sanitize input data if necessary
+
+        // Call createData function to insert data into the database
+        await createDataLuzon(id, city, province);
+
+        // Redirect to a page showing the data (change "/bossman" to the appropriate route)
+        res.redirect("/Luzon"); 
     }catch (error) {
             // Handle specific database errors
             if (error.code === 'ER_DUP_ENTRY') {

@@ -18,7 +18,7 @@ export async function databaseLuzon(){
     return rows
 }
 
-export async function createData(id, age){
+export async function createDatabossman(id, age){
     try {
         const result = await pool.query(`
             INSERT INTO bossmantable (idbossmantable, age)
@@ -30,5 +30,16 @@ export async function createData(id, age){
         throw error; // Re-throw the error to be handled by the caller
     }
 }
-const result = databaseLuzon()
-console.log(result)
+
+export async function createDataLuzon(id, city, province){
+    try {
+        const result = await pool.query(`
+            INSERT INTO Luzon (idLuzon, Cities, Provinces)
+            VALUES (?, ?, ?)`, [id, city, province]);
+            
+    } catch (error) {
+        // Handle any errors that might occur during the database query execution
+        console.error("Error in createData function:", error);
+        throw error; // Re-throw the error to be handled by the caller
+    }
+}
