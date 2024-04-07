@@ -1,5 +1,5 @@
 import express from 'express'
-import {databaseResultsbossman, databaseLuzon, createDatabossman, createDataLuzon} from './database.js'
+import {databaseResultsbossman, databaseLuzon, createDatabossman, createDataLuzon, updateDataLuzon} from './database.js'
 
 const app = express()
 app.set("view engine", "ejs")
@@ -86,7 +86,7 @@ app.post("/LuzonAddData", async (req, res) => {
 });
 
 app.get("/updateDataLuzon", (req, res) => {
-    res.render("name of update for luzon ejs"); // Assuming you have an EJS file named updateDataLuzon.ejs
+    res.render("webappLuzonUpdate.ejs"); // Assuming you have an EJS file named updateDataLuzon.ejs
 });
 
 app.post("/updateDataLuzon", async (req, res) => {
@@ -100,6 +100,7 @@ app.post("/updateDataLuzon", async (req, res) => {
 
         // Send a success response
         res.status(200).send("Data updated successfully");
+        res.redirect("/Luzon");
     } catch (error) {
         // Sending error response if something went wrong
         console.error("Error occurred:", error);
