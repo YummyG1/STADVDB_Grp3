@@ -85,6 +85,28 @@ app.post("/LuzonAddData", async (req, res) => {
         }
 });
 
+app.get("/updateDataLuzon", (req, res) => {
+    res.render("name of update for luzon ejs"); // Assuming you have an EJS file named updateDataLuzon.ejs
+});
+
+app.post("/updateDataLuzon", async (req, res) => {
+    try {
+        const id = req.body.id;
+        const city = req.body.city;
+        const province = req.body.province;
+
+        // Call updateDataLuzon function to update data in the database
+        const result = await updateDataLuzon(id, city, province);
+
+        // Send a success response
+        res.status(200).send("Data updated successfully");
+    } catch (error) {
+        // Sending error response if something went wrong
+        console.error("Error occurred:", error);
+        res.status(500).send("Internal server error");
+    }
+});
+
 app.use((err, req, res, next) => {
     console.error(err.stack)
     res.status(500).send('Something is not working')
