@@ -18,6 +18,54 @@ export async function databaseLuzon(){
     return rows
 }
 
+// CREATE FUNCTIONS
+
+export async function createAppointment(pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual) {
+    try {
+        const result = await pool.query(`
+            INSERT INTO appointments (pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual]);
+    } catch (error) {
+        console.error("Error in createAppointment function:", error);
+        throw error;
+    }
+}
+
+export async function createClinic(clinicid, hospitalname, IsHospital, City, Province, RegionName) {
+    try {
+        const result = await pool.query(`
+            INSERT INTO clinics (clinicid, hospitalname, IsHospital, City, Province, RegionName)
+            VALUES (?, ?, ?, ?, ?, ?)`, [clinicid, hospitalname, IsHospital, City, Province, RegionName]);
+    } catch (error) {
+        console.error("Error in createClinic function:", error);
+        throw error;
+    }
+}
+
+export async function createDoctor(doctorid, mainspecialty, age) {
+    try {
+        const result = await pool.query(`
+            INSERT INTO doctors (doctorid, mainspecialty, age)
+            VALUES (?, ?, ?)`, [doctorid, mainspecialty, age]);
+    } catch (error) {
+        console.error("Error in createDoctor function:", error);
+        throw error;
+    }
+}
+
+export async function createPx(pxid, age, gender) {
+    try {
+        const result = await pool.query(`
+            INSERT INTO px (pxid, age, gender)
+            VALUES (?, ?, ?)`, [pxid, age, gender]);
+    } catch (error) {
+        console.error("Error in createPx function:", error);
+        throw error;
+    }
+}
+
+
+
 export async function createDatabossman(id, age){
     try {
         const result = await pool.query(`
@@ -43,6 +91,13 @@ export async function createDataLuzon(id, city, province){
         throw error; // Re-throw the error to be handled by the caller
     }
 }
+
+// UPDATE FUNCTIONS
+
+
+
+
+
 
 export async function updateDataLuzon(id, city, province) {
     try {

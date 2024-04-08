@@ -15,11 +15,18 @@
     <h1>STADVDB MCO2 Web Application - S13 Group 3</h1>
     <h3>Luzon Dataset</h3>
 
+    <br>
+    <form action="/LuzonAddData" method="post" id = "searchLuzon">
+        <label for="id">Search ID:</label>
+        <input type="text" id="id" name="id" placeholder="Enter search term">
+        <input type="submit" value="Submit">
+    </form>
+
+    <br>
+    
     <a href="../LuzonAddData"><button>+ Add Data to Luzon Dataset</button></a>
     <a href="../updateDataLuzon"><button># Update Data in Luzon Dataset</button></a>
-    <br>
-      <label for="id">Search ID:</label>
-      <input type="text" id="id" name="id"><br>
+    
     <br><br>
 
     <% for (let i = 0; i < results.length; i++) { %>
@@ -30,6 +37,34 @@
     
     <br>
     <a href="../bossman"><button><-- Move to Bossman Dataset</button></a>
+
+    <script>
+        $(document).ready(function() {
+          $('#search-form').submit(function(event) {
+            event.preventDefault();
+            const searchTerm = $(this).find('input[name="term"]').val();
+            // Make AJAX request to search route
+            $.ajax({
+              url: '/search',
+              data: { term: searchTerm },
+              dataType: 'json',
+              success: function(data) {
+                // Handle search results here
+                $('#search-results').html(''); // Clear previous results
+                if (data.message) {
+                  $('#search-results').html(data.message); // Display error message
+                } else {
+                  // Display search results (explained later)
+                }
+              },
+              error: function(jqXHR, textStatus, errorThrown) {
+                console.error(textStatus, errorThrown);
+                $('#search-results').html('Error fetching results');
+              }
+            });
+          });
+        });
+      </script>
     
 </body>
 </html>

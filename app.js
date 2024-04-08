@@ -40,7 +40,7 @@ app.post("/bossmanAddData", async (req, res) => {
 
         // Redirect to a page showing the data (change "/bossman" to the appropriate route)
         res.redirect("/bossman"); 
-    }catch (error) {
+    } catch (error) {
             // Handle specific database errors
             if (error.code === 'ER_DUP_ENTRY') {
                 // Handle duplicate entry error
@@ -52,6 +52,24 @@ app.post("/bossmanAddData", async (req, res) => {
                 res.status(500).send("Internal server error");
             }
         }
+});
+
+app.get('/search', async (req, res) => {
+    const searchTerm = req.query.term;
+  
+    if (!searchTerm) {
+      return res.json({ message: 'Please enter a search term' });
+    }
+  
+    try {
+        const connection = await pool.getConnection();
+        const [rows] = await connection.query('SELECT * FROM Luzon WHERE Cities LIKE ?', `%${searchTerm}%`);
+        connection.release();
+        res.json(rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching search results' });
+    }
 });
 
 app.get("/LuzonAddData", (req, res) => {
@@ -71,7 +89,7 @@ app.post("/LuzonAddData", async (req, res) => {
 
         // Redirect to a page showing the data (change "/bossman" to the appropriate route)
         res.redirect("/Luzon"); 
-    }catch (error) {
+    } catch (error) {
             // Handle specific database errors
             if (error.code === 'ER_DUP_ENTRY') {
                 // Handle duplicate entry error
@@ -82,7 +100,7 @@ app.post("/LuzonAddData", async (req, res) => {
                 console.error("Error occurred:", error);
                 res.status(500).send("Internal server error");
             }
-        }
+    }
 });
 
 app.get("/updateDataLuzon", (req, res) => {
