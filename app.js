@@ -44,17 +44,17 @@ app.post("/bossmanAddData", async (req, res) => {
         // Redirect to a page showing the data (change "/bossman" to the appropriate route)
         res.redirect("/bossman"); 
     } catch (error) {
-            // Handle specific database errors
-            if (error.code === 'ER_DUP_ENTRY') {
-                // Handle duplicate entry error
-                console.error("Duplicate entry error:", error);
-                res.status(400).send("Error: Duplicate entry. This ID already exists.");    
-            } else {
-                // Handle other errors
-                console.error("Error occurred:", error);
-                res.status(500).send("Internal server error");
-            }
+        // Handle specific database errors
+        if (error.code === 'ER_DUP_ENTRY') {
+            // Handle duplicate entry error
+            console.error("Duplicate entry error:", error);
+            res.status(400).send("Error: Duplicate entry. This ID already exists.");    
+        } else {
+            // Handle other errors
+            console.error("Error occurred:", error);
+            res.status(500).send("Internal server error");
         }
+    }
 });
 
 app.get('/search', async (req, res) => {
@@ -93,16 +93,16 @@ app.post("/LuzonAddData", async (req, res) => {
         // Redirect to a page showing the data (change "/bossman" to the appropriate route)
         res.redirect("/Luzon"); 
     } catch (error) {
-            // Handle specific database errors
-            if (error.code === 'ER_DUP_ENTRY') {
-                // Handle duplicate entry error
-                console.error("Duplicate entry error:", error);
-                res.status(400).send("Error: Duplicate entry. This ID already exists.");    
-            } else {
-                // Handle other errors
-                console.error("Error occurred:", error);
-                res.status(500).send("Internal server error");
-            }
+        // Handle specific database errors
+        if (error.code === 'ER_DUP_ENTRY') {
+            // Handle duplicate entry error
+            console.error("Duplicate entry error:", error);
+            res.status(400).send("Error: Duplicate entry. This ID already exists.");    
+        } else {
+            // Handle other errors
+            console.error("Error occurred:", error);
+            res.status(500).send("Internal server error");
+        }
     }
 });
 
