@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset ="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, intial-scale=1">
+    <link rel ="stylesheet" href="/styles.css">
+
+</head>
+
+<title>Web Application</title>
+
+
+<body>
+    <h1>STADVDB MCO2 Web Application - S13 Group 3</h1>
+    <h3>Updating Data in Appointments Dataset</h3>
+    
+    <form action="/appointmentsUpdate" method="post">
+
+      <label for="apptID">Existing Appointment ID:</label>
+      <input type="text" id="apptID" name="apptID"><br>
+
+      <label for="pxid">Patient ID:</label>
+      <input type="text" id="pxid" name="pxid"><br>
+    
+      <label for="clinicid">Clinic ID:</label>
+      <input type="text" id="clinicid" name="clinicid"><br>
+    
+      <label for="doctorid">Doctor ID:</label>
+      <input type="text" id="doctorid" name="doctorid"><br>
+    
+      <label for="status">Status:</label>
+      <select id="status" name="status">
+        <option value="Queued">Queued</option>
+        <option value="Complete">Complete</option>
+        <option value="Serving">Serving</option>
+        <option value="Cancel">Cancel</option>
+        <option value="NoShow">No Show</option>
+        <option value="Skip">Skip</option>
+      </select><br>
+    
+      <label for="TimeQueued">Time Queued:</label>
+      <input type="datetime-local" id="TimeQueued" name="TimeQueued"><br>
+    
+      <label for="QueueDate">Queue Date:</label>
+      <input type="date" id="QueueDate" name="QueueDate"><br>
+    
+      <label for="StartTime">Start Time:</label>
+      <input type="time" id="StartTime" name="StartTime"><br>
+    
+      <label for="EndTime">End Time:</label>
+      <input type="time" id="EndTime" name="EndTime"><br>
+    
+      <label for="type">Type:</label>
+      <input type="text" id="type" name="type"><br>
+    
+      <label for="Virtual">Virtual:</label>
+      <input type="text" id="Virtual" name="Virtual"><br><br>
+    
+      <input type="submit" value="Submit">
+    </form>
+    
+    
+
+  <br>
+
+  <a href="../appointments"><button>Cancel</button></a>
+
+</body>
+</html>

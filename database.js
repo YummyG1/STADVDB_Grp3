@@ -18,6 +18,26 @@ export async function databaseLuzon(){
     return rows
 }
 
+export async function databaseGetAppointments(){
+    const [rows]= await pool.query("SELECT * FROM appointment")
+    return rows
+}
+
+export async function databaseGetClinics(){
+    const [rows]= await pool.query("SELECT * FROM clinics")
+    return rows
+}
+
+export async function databaseGetDoctors(){
+    const [rows]= await pool.query("SELECT * FROM doctors")
+    return rows
+}
+
+export async function databaseGetPx(){
+    const [rows]= await pool.query("SELECT * FROM px")
+    return rows
+}
+
 // CREATE FUNCTIONS
 
 export async function createAppointment(pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual) {
@@ -95,9 +115,73 @@ export async function createDataLuzon(id, city, province){
 // UPDATE FUNCTIONS
 
 
+export async function updateAppointment(appid, pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual) {
+    try {
+        const result = await pool.query(`
+            UPDATE appointments 
+            SET pxid = ?, clinicid = ?, doctorid = ?, status = ?, TimeQueued = ?, QueueDate = ?, StartTime = ?, EndTime = ?, type = ?, Virtual = ?
+            WHERE appid = ?`, [pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, appid]);
 
+        if (result.affectedRows === 0) {
+            throw new Error(`Record with appid ${appid} not found.`);
+        }
+        return result;
+    } catch (error) {
+        console.error("Error in updateAppointment function:", error);
+        throw error;
+    }
+}
 
+export async function updateClinic(clinicid, hospitalname, IsHospital, City, Province, RegionName) {
+    try {
+        const result = await pool.query(`
+            UPDATE clinics 
+            SET hospitalname = ?, IsHospital = ?, City = ?, Province = ?, RegionName = ?
+            WHERE clinicid = ?`, [hospitalname, IsHospital, City, Province, RegionName, clinicid]);
 
+        if (result.affectedRows === 0) {
+            throw new Error(`Record with clinicid ${clinicid} not found.`);
+        }
+        return result;
+    } catch (error) {
+        console.error("Error in updateClinic function:", error);
+        throw error;
+    }
+}
+
+export async function updateDoctor(doctorid, mainspecialty, age) {
+    try {
+        const result = await pool.query(`
+            UPDATE doctors 
+            SET mainspecialty = ?, age = ?
+            WHERE doctorid = ?`, [mainspecialty, age, doctorid]);
+
+        if (result.affectedRows === 0) {
+            throw new Error(`Record with doctorid ${doctorid} not found.`);
+        }
+        return result;
+    } catch (error) {
+        console.error("Error in updateDoctor function:", error);
+        throw error;
+    }
+}
+
+export async function updatePx(pxid, age, gender) {
+    try {
+        const result = await pool.query(`
+            UPDATE px 
+            SET age = ?, gender = ?
+            WHERE pxid = ?`, [age, gender, pxid]);
+
+        if (result.affectedRows === 0) {
+            throw new Error(`Record with pxid ${pxid} not found.`);
+        }
+        return result;
+    } catch (error) {
+        console.error("Error in updatePx function:", error);
+        throw error;
+    }
+}
 
 export async function updateDataLuzon(id, city, province) {
     try {

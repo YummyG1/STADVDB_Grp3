@@ -1,11 +1,14 @@
 import express from 'express'
-import {databaseResultsbossman, databaseLuzon, createDatabossman, createDataLuzon, updateDataLuzon} from './database.js'
+import {databaseGetAppointments, createAppointment, updateAppointment, databaseResultsbossman, databaseLuzon, createDatabossman, createDataLuzon, updateDataLuzon} from './database.js'
 
 const app = express()
 app.set("view engine", "ejs")
 
 app.get("/", async (req, res) => { //homepage of the webapp
-    res.render("webapp.ejs")
+    
+    const results = await databaseGetAppointments()
+    console.log(results)
+    res.render("appointment.ejs", {results})
 })
 
 app.use(express.static("public"))
@@ -125,6 +128,67 @@ app.post("/updateDataLuzon", async (req, res) => {
         res.status(500).send("Internal server error");
     }
 });
+
+// Routes for the appointments dataset
+
+// Route to render the list of appointments
+app.get("/appointments", async (req, res) => {
+
+    const results = await databaseGetAppointments()
+    res.render("appointmentsList.ejs", { results }); // Replace with actual EJS file
+});
+
+// Route to display the form for adding a new appointment
+app.get("/appointmentsAdd", (req, res) => {
+    res.render("appointmentsAdd.ejs"); // Replace with actual EJS file for adding appointments
+});
+
+// Route to handle the submission of the form for adding new appointments
+app.post("/appointmentsAdd", async (req, res) => {
+    try {
+        // Extract data from the form submission
+        const { pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual } = req.body;
+        await createAppointment(pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual);
+        res.redirect("/appointments"); 
+    } catch (error) {
+        if (error.code === 'ER_DUP_ENTRY') {
+            console.error("Duplicate entry error:", error);
+            res.status(400).send("Error: Duplicate entry. This ID already exists.");    
+        } else {
+            console.error("Error occurred:", error);
+            res.status(500).send("Internal server error");
+        }
+    }
+});
+
+app.get("/appointmentsUpdate", (req, res) => {
+    res.render("appointmentsUpdate.ejs"); // Replace with actual EJS file for updating appointments
+});
+
+// Route to handle the update of an existing appointment
+app.post("/appointmentsUpdate", async (req, res) => {
+    try {
+        // Extract data from the form submission
+        const { appid, pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual } = req.body;
+        const result = await updateAppointment(appid, pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual);
+        
+        // Check the result and provide appropriate response
+        if (result.affectedRows > 0) {
+            res.redirect("/appointments");
+        } else {
+            res.status(404).send("Appointment not found.");
+        }
+    } catch (error) {
+        if (error.code === 'ER_DUP_ENTRY') {
+            console.error("Duplicate entry error:", error);
+            res.status(400).send("Error: Duplicate entry.");    
+        } else {
+            console.error("Error occurred:", error);
+            res.status(500).send("Internal server error");
+        }
+    }
+});
+
 
 app.use((err, req, res, next) => {
     console.error(err.stack)
