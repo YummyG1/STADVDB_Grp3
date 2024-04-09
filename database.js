@@ -48,10 +48,10 @@ export async function createAppointment(pxid, clinicid, doctorid, apptid, status
     }
 }
 
-export async function deleteAppointment(pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual) {
+export async function deleteAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual) {
     try {
         const result = await pool.query(`
-            DELETE FROM appointment WHERE apptid=?;`, [pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual])
+            DELETE FROM appointment WHERE apptid=?;`, [pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual])
     } catch (error) {
         console.error("Error in deleteAppointment function:", error)
         throw error
@@ -60,15 +60,15 @@ export async function deleteAppointment(pxid, clinicid, doctorid, status, TimeQu
 
 // UPDATE FUNCTIONS
 
-export async function updateAppointment(appid, pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual) {
+export async function updateAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual) {
     try {
         const result = await pool.query(`
             UPDATE appointment 
             SET pxid = ?, clinicid = ?, doctorid = ?, status = ?, TimeQueued = ?, QueueDate = ?, StartTime = ?, EndTime = ?, type = ?, Virtual = ?
-            WHERE appid = ?`, [pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, appid])
+            WHERE appid = ?`, [pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, appid])
 
         if (result.affectedRows === 0) {
-            throw new Error(`Record with appid ${appid} not found.`)
+            throw new Error(`Record with appid ${apptid} not found.`)
         }
         return result
     } catch (error) {
