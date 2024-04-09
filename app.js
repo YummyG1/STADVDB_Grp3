@@ -1,7 +1,7 @@
 import express from 'express'
 import {databaseGetAppointments, createAppointment, updateAppointment, 
         databaseResultsbossman, databaseLuzon, createDatabossman, createDataLuzon, 
-        updateDataLuzon, searchAppointments} from './database.js'
+        updateDataLuzon, searchAppointments, deleteAppointment} from './database.js'
 
 const app = express()
 app.set("view engine", "ejs")
@@ -181,6 +181,29 @@ app.post("/appointmentsUpdate", async (req, res) => {
         if (error.code === 'ER_DUP_ENTRY') {
             console.error("Duplicate entry error:", error)
             res.status(400).send("Error: Duplicate entry.")    
+        } else {
+            console.error("Error occurred:", error)
+            res.status(500).send("Internal server error")
+        }
+    }
+})
+
+// Route to display the form for adding a new appointment
+app.get("/appointmentsDelete", (req, res) => {
+    res.render("appointmentsDelete.ejs") // Replace with actual EJS file for adding appointments
+})
+
+// Route to handle the submission of the form for adding new appointments
+app.post("/appointmentsDelete", async (req, res) => {
+    try {
+        // Extract data from the form submission
+        const { apptid } = req.body
+        await deleteAppointment(apptid)
+        res.redirect("/appointments") 
+    } catch (error) {
+        if (error.code === 'ER_DUP_ENTRY') {
+            console.error("Duplicate entry error:", error)
+            res.status(400).send("Error: Duplicate entry. This ID already exists.")    
         } else {
             console.error("Error occurred:", error)
             res.status(500).send("Internal server error")
