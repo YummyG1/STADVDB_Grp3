@@ -38,9 +38,6 @@ export async function createAppointment(pxid, clinicid, doctorid, status, TimeQu
     }
 }
 
-
-
-
 export async function createDatabossman(id, age){
     try {
         const result = await pool.query(`
@@ -69,7 +66,6 @@ export async function createDataLuzon(id, city, province){
 
 // UPDATE FUNCTIONS
 
-
 export async function updateAppointment(appid, pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual) {
     try {
         const result = await pool.query(`
@@ -86,7 +82,6 @@ export async function updateAppointment(appid, pxid, clinicid, doctorid, status,
         throw error
     }
 }
-
 
 export async function updateDataLuzon(id, city, province) {
     try {
@@ -106,5 +101,21 @@ export async function updateDataLuzon(id, city, province) {
         // Handle any errors that might occur during the database query execution
         console.error("Error in updateDataLuzon function:", error)
         throw error // Re-throw the error to be handled by the caller
+    }
+}
+
+// search function
+export async function searchAppointments(apptid) {
+    try {
+        // Execute the query with the search query parameter
+        const [rows] = await pool.query(`
+        SELECT * FROM appointment 
+        WHERE apptid LIKE (?)`[apptid]);
+        // Return the search results
+        return rows;
+    } catch (error) {
+        // Handle any errors that might occur during the database query execution
+        console.error("Error in searchAppointments function:", error);
+        throw error; // Re-throw the error to be handled by the caller
     }
 }
