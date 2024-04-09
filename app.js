@@ -71,23 +71,16 @@ app.get("/appointmentsUpdate", (req, res) => {
 app.post("/appointmentsUpdate", async (req, res) => {
     try {
         // Extract data from the form submission
-        const { apptid, pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual } = req.body
-        const result = await updateAppointment(apptid, pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual)
+        const { pxid, clinicid, doctorid, apptid,  status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual } = req.body
+        const updatedApptId = req.body.apptid;
+        const result = await updateAppointment(pxid, clinicid, doctorid, updatedApptId, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, updatedApptId);
         
         // Check the result and provide appropriate response
-        if (result.affectedRows > 0) {
-            res.redirect("/appointments")
-        } else {
-            res.status(404).send("Appointment not found.")
-        }
-    } catch (error) {
-        if (error.code === 'ER_DUP_ENTRY') {
-            console.error("Duplicate entry error:", error)
-            res.status(400).send("Error: Duplicate entry.")    
-        } else {
-            console.error("Error occurred:", error)
-            res.status(500).send("Internal server error")
-        }
+        res.redirect("/appointments")
+        
+    } catch (error) { 
+        console.error("Error occurred:", error)
+        res.status(500).send("Internal server error")
     }
 })
 
