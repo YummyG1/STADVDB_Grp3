@@ -62,20 +62,22 @@ export async function deleteAppointment(pxid, clinicid, doctorid, apptid, status
 
 export async function updateAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual) {
     try {
+        console.log(apptid)
         const result = await pool.query(`
             UPDATE appointment 
-            SET pxid = ?, clinicid = ?, doctorid = ?, status = ?, TimeQueued = ?, QueueDate = ?, StartTime = ?, EndTime = ?, type = ?, Virtual = ?
-            WHERE apptid = ?`, [pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual])
+            SET pxid = ?, clinicid = ?, doctorid = ?, status = ?, TimeQueued = ?, QueueDate = ?, StartTime = ?, EndTime = ?, type = ?, \`Virtual\` = ?
+            WHERE apptid = ?`, [pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, apptid]);
 
         if (result.affectedRows === 0) {
-            throw new Error(`Record with appid ${apptid} not found.`)
+            throw new Error(`Record with apptid ${apptid} not found.`);
         }
-        return result
+        return result;
     } catch (error) {
-        console.error("Error in updateAppointment function:", error)
-        throw error
+        console.error("Error in updateAppointment function:", error);
+        throw error;
     }
 }
+
 
 // search function
 export async function searchAppointments(apptid) {
