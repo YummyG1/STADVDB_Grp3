@@ -8,16 +8,23 @@
 
 </head>
 
-
 <title>Web Application</title>
 
+
+<body>
     <h1>STADVDB MCO2 Web Application - S13 Group 3</h1>
-    <h3>Choose a dataset to view:</h3>
+    <h3>Deleting Data to Appointments Dataset</h3>
+    
+    <form action="/appointmentsDelete" method="post">
+        <label for="apptid">Appointment ID:</label>
+        <input type="text" id="apptid" name="apptid"><br>
+      
+        <input type="submit" value="Submit">
+      </form>
 
     <br>
 
-    <a href="../bossman"><button>Bossman Dataset</button></a>
-    <a href="../Luzon"><button>Luzon Dataset</button></a>
+    <a href="../appointments"><button>Cancel</button></a>
 
 </body>
 </html>

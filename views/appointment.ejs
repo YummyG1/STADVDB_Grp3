@@ -20,8 +20,9 @@
     </form>
     <br>
     
-    <a href="../appointmentsAdd"><button>+ Add Data to Appointments Dataset</button></a>
-    <a href="../appointmentsUpdate"><button># Update Data in Appointments Dataset</button></a>
+    <a href="../appointmentsAdd"><button>+ Add Data Entry to Dataset</button></a>
+    <a href="../appointmentsUpdate"><button># Update Data Entry in Dataset</button></a>
+    <a href="../appointmentsDelete"><button># Delete Data Entry in Dataset</button></a>
     
     <br><br>
 
@@ -29,16 +30,16 @@
         <!-- Display Search Results -->
         <% for (let i = 0; i < results.length; i++) { %>
             <span> Appointment ID: <%= results[i].apptid %> </span><br>
-            <span> Patient ID: <%= results[i].pxid %> </span><br>
-            <span> Clinic ID: <%= results[i].clinicid %> </span><br>
-            <span> Doctor ID: <%= results[i].doctorid %> </span><br>
-            <span> Status: <%= results[i].status %> </span><br>
-            <span> Time Queued: <%= results[i].TimeQueued %> </span><br>
-            <span> Queue Date: <%= results[i].QueueDate %> </span><br>
-            <span> Start Time: <%= results[i].StartTime %> </span><br>
-            <span> End Time: <%= results[i].EndTime %> </span><br>
-            <span> Type: <%= results[i].type %> </span><br>
-            <span> Virtual: <%= results[i].Virtual %> </span><br>
+            <span> Patient ID:     <%= results[i].pxid %> </span><br>
+            <span> Clinic ID:      <%= results[i].clinicid %> </span><br>
+            <span> Doctor ID:      <%= results[i].doctorid %> </span><br>
+            <span> Status:         <%= results[i].status %> </span><br>
+            <span> Time Queued:    <%= results[i].TimeQueued %> </span><br>
+            <span> Queue Date:     <%= results[i].QueueDate %> </span><br>
+            <span> Start Time:     <%= results[i].StartTime %> </span><br>
+            <span> End Time:       <%= results[i].EndTime %> </span><br>
+            <span> Type:           <%= results[i].type %> </span><br>
+            <span> Virtual:        <%= results[i].Virtual %> </span><br>
             <br><hr>
         <% } %>
     <% } else { %>
