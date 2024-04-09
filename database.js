@@ -1,6 +1,6 @@
 import mysql from 'mysql2'
 
-const pool = mysql.createPool({
+let pool = mysql.createPool({
     host: 'ccscloud.dlsu.edu.ph',
     user: 'mainManager',
     port: '20048',
@@ -19,8 +19,51 @@ export async function databaseLuzon(){
 }
 
 export async function databaseGetAppointments(){
-    const [rows]= await pool.query("SELECT * FROM appointment")
-    return rows
+    try {
+        const [rows] = await pool.query("SELECT * FROM appointment");
+        return rows;
+    } catch (error) {
+        console.error("Error occurred:", error.message);
+        // Handle connection error and reconfigure pool
+        if (error.code === 'PROTOCOL_CONNECTION_LOST' || error.code === 'ETIMEDOUT') {
+            console.log("Reconfiguring pool...");
+            try {
+                // Attempt reconfiguration with userServer1 and port 20049
+                pool = mysql.createPool({
+                    host: 'ccscloud.dlsu.edu.ph',
+                    user: 'userServer1',
+                    port: '20049',
+                    database: 'clustertest'
+                }).promise();
+                // Retry the query
+                const [rows] = await pool.query("SELECT * FROM appointment");
+                return rows;
+            } catch (error) {
+                console.error("Error occurred while retrying with userServer1 and port 20049:", error.message);
+                // Attempt reconfiguration with userServer2 and port 20050
+                if (error.code === 'PROTOCOL_CONNECTION_LOST' || error.code === 'ETIMEDOUT') {
+                    console.log("Reconfiguring pool...");
+                    try {
+                        console.log("Retrying with userServer2 and port 20050...");
+                        pool = mysql.createPool({
+                            host: 'ccscloud.dlsu.edu.ph',
+                            user: 'userServer2',
+                            port: '20050',
+                            database: 'clustertest'
+                        }).promise();
+                        // Retry the query
+                        const [rows] = await pool.query("SELECT * FROM appointment");
+                        return rows;
+                    } catch (error) {
+                        console.error("Error occurred while retrying with userServer2 and port 20050:", error.message);
+                        throw error;
+                    }
+                }
+            }
+        } else {
+            throw error;
+        }
+    }
 }
 
 

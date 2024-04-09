@@ -217,6 +217,6 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something is not working')
 })
 
-app.listen(20048,()=> {
+app.listen(3000,()=> {
     console.log('Server running')
 })
