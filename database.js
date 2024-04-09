@@ -65,7 +65,7 @@ export async function updateAppointment(pxid, clinicid, doctorid, apptid, status
         const result = await pool.query(`
             UPDATE appointment 
             SET pxid = ?, clinicid = ?, doctorid = ?, status = ?, TimeQueued = ?, QueueDate = ?, StartTime = ?, EndTime = ?, type = ?, Virtual = ?
-            WHERE appid = ?`, [pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual])
+            WHERE apptid = ?`, [pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual])
 
         if (result.affectedRows === 0) {
             throw new Error(`Record with appid ${apptid} not found.`)
