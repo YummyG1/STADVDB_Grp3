@@ -40,7 +40,7 @@ export async function databaseGetAppointments(){
 export async function createAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual) {
     try {
         const result = await pool.query(`
-            INSERT INTO appointment (pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual)
+            INSERT INTO appointment (pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type,  \`Virtual\`)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual])
     } catch (error) {
         console.error("Error in createAppointment function:", error)
@@ -65,7 +65,7 @@ export async function updateAppointment(pxid, clinicid, doctorid, apptid, status
         const result = await pool.query(`
             UPDATE appointment 
             SET pxid = ?, clinicid = ?, doctorid = ?, status = ?, TimeQueued = ?, QueueDate = ?, StartTime = ?, EndTime = ?, type = ?, Virtual = ?
-            WHERE appid = ?`, [pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, appid])
+            WHERE appid = ?`, [pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual])
 
         if (result.affectedRows === 0) {
             throw new Error(`Record with appid ${apptid} not found.`)
