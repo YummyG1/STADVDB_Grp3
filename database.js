@@ -40,36 +40,14 @@ export async function databaseGetAppointments(){
                 return rows;
             } catch (error) {
                 console.error("Error occurred while retrying with userServer1 and port 20049:", error.message);
-                // Attempt reconfiguration with userServer2 and port 20050
-                if (error.code === 'PROTOCOL_CONNECTION_LOST' || error.code === 'ETIMEDOUT') {
-                    console.log("Reconfiguring pool...");
-                    try {
-                        console.log("Retrying with userServer2 and port 20050...");
-                        pool = mysql.createPool({
-                            host: 'ccscloud.dlsu.edu.ph',
-                            user: 'userServer2',
-                            port: '20050',
-                            database: 'clustertest'
-                        }).promise();
-                        // Retry the query
-                        const [rows] = await pool.query("SELECT * FROM appointment");
-                        return rows;
-                    } catch (error) {
-                        console.error("Error occurred while retrying with userServer2 and port 20050:", error.message);
-                        throw error;
-                    }
-                }
+                throw error;
             }
-        } else {
-            throw error;
-        }
+        } 
     }
 }
 
 
-
 // CREATE FUNCTIONS
-
 export async function createAppointment(pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual) {
     try {
         const result = await pool.query(`
