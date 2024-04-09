@@ -49,8 +49,8 @@ app.get("/appointmentsAdd", (req, res) => {
 app.post("/appointmentsAdd", async (req, res) => {
     try {
         // Extract data from the form submission
-        const { pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual } = req.body
-        await createAppointment(pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual)
+        const { pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual } = req.body
+        await createAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual)
         res.redirect("/appointments") 
     } catch (error) {
         if (error.code === 'ER_DUP_ENTRY') {
@@ -71,8 +71,8 @@ app.get("/appointmentsUpdate", (req, res) => {
 app.post("/appointmentsUpdate", async (req, res) => {
     try {
         // Extract data from the form submission
-        const { appid, pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual } = req.body
-        const result = await updateAppointment(appid, pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual)
+        const { apptid, pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual } = req.body
+        const result = await updateAppointment(apptid, pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual)
         
         // Check the result and provide appropriate response
         if (result.affectedRows > 0) {
