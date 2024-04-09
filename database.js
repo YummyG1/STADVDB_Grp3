@@ -8,16 +8,6 @@ let pool = mysql.createPool({
 
 }).promise()
 
-export async function databaseResultsbossman(){
-    const [rows]= await pool.query("SELECT * FROM bossmantable") // selecting what table to show 
-    return rows
-}
-
-export async function databaseLuzon(){
-    const [rows]= await pool.query("SELECT * FROM Luzon")
-    return rows
-}
-
 export async function databaseGetAppointments(){
     try {
         const [rows] = await pool.query("SELECT * FROM appointment");
@@ -45,7 +35,6 @@ export async function databaseGetAppointments(){
         } 
     }
 }
-
 
 // CREATE FUNCTIONS
 export async function createAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual) {
