@@ -1,14 +1,13 @@
 import express from 'express'
-import {databaseGetAppointments, createAppointment, updateAppointment, databaseResultsbossman, databaseLuzon, createDatabossman, createDataLuzon, updateDataLuzon} from './database.js'
+import {databaseGetAppointments, createAppointment, updateAppointment, 
+        databaseResultsbossman, databaseLuzon, createDatabossman, createDataLuzon, 
+        updateDataLuzon, searchAppointments} from './database.js'
 
 const app = express()
 app.set("view engine", "ejs")
 
 app.get("/", async (req, res) => { //homepage of the webapp
-    
-    const results = await databaseGetAppointments()
-    console.log(results)
-    res.render("appointment.ejs", {results})
+    res.render("webapp.ejs")
 })
 
 app.use(express.static("public"))
@@ -57,23 +56,7 @@ app.post("/bossmanAddData", async (req, res) => {
     }
 });
 
-app.get('/search', async (req, res) => {
-    const searchTerm = req.query.term;
-  
-    if (!searchTerm) {
-      return res.json({ message: 'Please enter a search term' });
-    }
-  
-    try {
-        const connection = await pool.getConnection();
-        const [rows] = await connection.query('SELECT * FROM Luzon WHERE Cities LIKE ?', `%${searchTerm}%`);
-        connection.release();
-        res.json(rows);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error fetching search results' });
-    }
-});
+
 
 app.get("/LuzonAddData", (req, res) => {
     res.render("webappLuzonAdd.ejs");
@@ -133,9 +116,25 @@ app.post("/updateDataLuzon", async (req, res) => {
 
 // Route to render the list of appointments
 app.get("/appointments", async (req, res) => {
+    try {
+        let results;
 
-    const results = await databaseGetAppointments()
-    res.render("appointmentsList.ejs", { results }); // Replace with actual EJS file
+        // Check if a search query parameter is present in the request URL
+        if (req.query.search) {
+            // If search query parameter is present, perform search based on the query
+            results = await searchAppointments(req.query.search);
+        } else {
+            // If no search query parameter is present, retrieve all appointments
+            results = await databaseGetAppointments();
+        }
+
+        // Render the appointment.ejs template and pass the results
+        res.render("appointment.ejs", { results });
+    } catch (error) {
+        // Handle errors appropriately
+        console.error("Error occurred:", error);
+        res.status(500).send("Internal server error");
+    }
 });
 
 // Route to display the form for adding a new appointment
@@ -188,6 +187,8 @@ app.post("/appointmentsUpdate", async (req, res) => {
         }
     }
 });
+
+
 
 
 app.use((err, req, res, next) => {

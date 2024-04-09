@@ -1,27 +1,23 @@
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
-    <meta charset ="UTF-8">
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, intial-scale=1">
-    <link rel ="stylesheet" href="/styles.css">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/styles.css">
+    <title>Web Application</title>
 </head>
-
-<title>Web Application</title>
-
-
 <body>
     <h1>STADVDB MCO2 Web Application - S13 Group 3</h1>
     <h3>Appointments Dataset</h3>
 
     <br>
-    <form action="/Search" method="post" id = "search">
-        <label for="id">Search appointment ID:</label>
-        <input type="text" id="id" name="id" placeholder="Enter search term">
-        <input type="submit" value="Submit">
+    <!-- Search Form -->
+    <form action="/appointments" method="GET" id="search">
+        <label for="searchTerm">Search appointment ID:</label>
+        <input type="text" id="searchTerm" name="searchTerm" placeholder="Enter search term">
+        <button type="submit">Submit</button>
     </form>
-
     <br>
     
     <a href="../appointmentsAdd"><button>+ Add Data to Appointments Dataset</button></a>
@@ -29,52 +25,26 @@
     
     <br><br>
 
-    <% for (let i = 0; i < results.length; i++) { %>
-
-        <span> Appointment ID: <%= results[i].apptid %> </span><br>
-        <span> Patient ID: <%= results[i].pxid %> </span><br>
-        <span> Clinic ID: <%= results[i].clinicid %> </span><br>
-        <span> Doctor ID: <%= results[i].doctorid %> </span><br>
-        <span> Status: <%= results[i].status %> </span><br>
-        <span> Time Queued: <%= results[i].TimeQueued %> </span><br>
-        <span> Queue Date: <%= results[i].QueueDate %> </span><br>
-        <span> Start Time: <%= results[i].StartTime %> </span><br>
-        <span> End Time: <%= results[i].EndTime %> </span><br>
-        <span> Type: <%= results[i].type %> </span><br>
-        <span> Virtual: <%= results[i].Virtual %> </span><br>
-        <br><hr>
+    <% if (results && results.length > 0) { %>
+        <!-- Display Search Results -->
+        <% for (let i = 0; i < results.length; i++) { %>
+            <span> Appointment ID: <%= results[i].apptid %> </span><br>
+            <span> Patient ID: <%= results[i].pxid %> </span><br>
+            <span> Clinic ID: <%= results[i].clinicid %> </span><br>
+            <span> Doctor ID: <%= results[i].doctorid %> </span><br>
+            <span> Status: <%= results[i].status %> </span><br>
+            <span> Time Queued: <%= results[i].TimeQueued %> </span><br>
+            <span> Queue Date: <%= results[i].QueueDate %> </span><br>
+            <span> Start Time: <%= results[i].StartTime %> </span><br>
+            <span> End Time: <%= results[i].EndTime %> </span><br>
+            <span> Type: <%= results[i].type %> </span><br>
+            <span> Virtual: <%= results[i].Virtual %> </span><br>
+            <br><hr>
+        <% } %>
+    <% } else { %>
+        <p>No results found.</p>
     <% } %>
     
-    
     <br>
-
-    <script>
-        $(document).ready(function() {
-          $('#search-form').submit(function(event) {
-            event.preventDefault();
-            const searchTerm = $(this).find('input[name="term"]').val();
-            // Make AJAX request to search route
-            $.ajax({
-              url: '/search',
-              data: { term: searchTerm },
-              dataType: 'json',
-              success: function(data) {
-                // Handle search results here
-                $('#search-results').html(''); // Clear previous results
-                if (data.message) {
-                  $('#search-results').html(data.message); // Display error message
-                } else {
-                  // Display search results (explained later)
-                }
-              },
-              error: function(jqXHR, textStatus, errorThrown) {
-                console.error(textStatus, errorThrown);
-                $('#search-results').html('Error fetching results');
-              }
-            });
-          });
-        });
-      </script>
-    
 </body>
 </html>
