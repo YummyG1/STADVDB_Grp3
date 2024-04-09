@@ -31,10 +31,10 @@ export async function createAppointment(pxid, clinicid, doctorid, status, TimeQu
     try {
         const result = await pool.query(`
             INSERT INTO appointments (pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual]);
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual])
     } catch (error) {
-        console.error("Error in createAppointment function:", error);
-        throw error;
+        console.error("Error in createAppointment function:", error)
+        throw error
     }
 }
 
@@ -42,12 +42,12 @@ export async function createDatabossman(id, age){
     try {
         const result = await pool.query(`
             INSERT INTO bossmantable (idbossmantable, age)
-            VALUES (?, ?)`, [id, age]);
+            VALUES (?, ?)`, [id, age])
             
     } catch (error) {
         // Handle any errors that might occur during the database query execution
-        console.error("Error in createData function:", error);
-        throw error; // Re-throw the error to be handled by the caller
+        console.error("Error in createData function:", error)
+        throw error // Re-throw the error to be handled by the caller
     }
 }
 
@@ -55,12 +55,12 @@ export async function createDataLuzon(id, city, province){
     try {
         const result = await pool.query(`
             INSERT INTO Luzon (idLuzon, Cities, Provinces)
-            VALUES (?, ?, ?)`, [id, city, province]);
+            VALUES (?, ?, ?)`, [id, city, province])
             
     } catch (error) {
         // Handle any errors that might occur during the database query execution
-        console.error("Error in createData function:", error);
-        throw error; // Re-throw the error to be handled by the caller
+        console.error("Error in createData function:", error)
+        throw error // Re-throw the error to be handled by the caller
     }
 }
 
@@ -71,15 +71,15 @@ export async function updateAppointment(appid, pxid, clinicid, doctorid, status,
         const result = await pool.query(`
             UPDATE appointments 
             SET pxid = ?, clinicid = ?, doctorid = ?, status = ?, TimeQueued = ?, QueueDate = ?, StartTime = ?, EndTime = ?, type = ?, Virtual = ?
-            WHERE appid = ?`, [pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, appid]);
+            WHERE appid = ?`, [pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, appid])
 
         if (result.affectedRows === 0) {
-            throw new Error(`Record with appid ${appid} not found.`);
+            throw new Error(`Record with appid ${appid} not found.`)
         }
-        return result;
+        return result
     } catch (error) {
-        console.error("Error in updateAppointment function:", error);
-        throw error;
+        console.error("Error in updateAppointment function:", error)
+        throw error
     }
 }
 
@@ -88,19 +88,19 @@ export async function updateDataLuzon(id, city, province) {
         const result = await pool.query(`
             UPDATE Luzon 
             SET Cities = ?, Provinces = ?
-            WHERE idLuzon = ?`, [city, province, id]);
+            WHERE idLuzon = ?`, [city, province, id])
 
         // Check if any rows were affected by the update operation
         if (result.affectedRows === 0) {
-            throw new Error(`Record with id ${id} not found.`);
+            throw new Error(`Record with id ${id} not found.`)
         }
 
         // Return the result or any necessary data
-        return result;
+        return result
     } catch (error) {
         // Handle any errors that might occur during the database query execution
-        console.error("Error in updateDataLuzon function:", error);
-        throw error; // Re-throw the error to be handled by the caller
+        console.error("Error in updateDataLuzon function:", error)
+        throw error // Re-throw the error to be handled by the caller
     }
 }
 
