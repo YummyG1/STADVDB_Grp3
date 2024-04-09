@@ -112,26 +112,27 @@ app.post("/updateDataLuzon", async (req, res) => {
     }
 });
 
-// Routes for the appointments dataset
+app.get("/appointments/:id", (req, res) => {
+    res.redirect("/appointments");
+});
 
-// Route to render the list of appointments
 app.get("/appointments", async (req, res) => {
     try {
         let results;
 
-        // Check if a search query parameter is present in the request URL
-        if (req.query.search) {
-            // If search query parameter is present, perform search based on the query
-            results = await searchAppointments(req.query.search);
+        // Check if a search term is present in the query parameters
+        const searchTerm = req.query.searchTerm;
+        if (searchTerm) {
+            // If search term is present, perform search
+            results = await searchAppointments(searchTerm);
         } else {
-            // If no search query parameter is present, retrieve all appointments
+            // If no search term, retrieve all appointments
             results = await databaseGetAppointments();
         }
 
-        // Render the appointment.ejs template and pass the results
+        // Render the appointment.ejs template with the results
         res.render("appointment.ejs", { results });
     } catch (error) {
-        // Handle errors appropriately
         console.error("Error occurred:", error);
         res.status(500).send("Internal server error");
     }
@@ -187,8 +188,6 @@ app.post("/appointmentsUpdate", async (req, res) => {
         }
     }
 });
-
-
 
 
 app.use((err, req, res, next) => {

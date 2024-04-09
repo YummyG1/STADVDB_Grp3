@@ -107,15 +107,15 @@ export async function updateDataLuzon(id, city, province) {
 // search function
 export async function searchAppointments(apptid) {
     try {
-        // Execute the query with the search query parameter
+        // Construct and execute the SQL query with the search term
         const [rows] = await pool.query(`
-        SELECT * FROM appointment 
-        WHERE apptid LIKE (?)`[apptid]);
+            SELECT * FROM appointment 
+            WHERE apptid LIKE ?`, [`%${apptid}%`]); // Use placeholders for query parameters
+
         // Return the search results
         return rows;
     } catch (error) {
-        // Handle any errors that might occur during the database query execution
         console.error("Error in searchAppointments function:", error);
-        throw error; // Re-throw the error to be handled by the caller
+        throw error;
     }
 }
