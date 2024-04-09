@@ -1,12 +1,12 @@
 import mysql from 'mysql2'
-
+let n_port = 20048;
+let userServerIncrement = 0;
 let pool = mysql.createPool({
     host: 'ccscloud.dlsu.edu.ph',
     user: 'mainManager',
-    port: '20048',
+    port: n_port,
     database: 'clustertest'
-
-}).promise()
+}).promise();
 
 export async function databaseGetAppointments(){
     try {
@@ -19,17 +19,18 @@ export async function databaseGetAppointments(){
             console.log("Reconfiguring pool...");
             try {
                 // Attempt reconfiguration with userServer1 and port 20049
+                userServerIncrement++;
+                n_port++;
                 pool = mysql.createPool({
                     host: 'ccscloud.dlsu.edu.ph',
-                    user: 'userServer1',
-                    port: '20049',
+                    user: `userServer${userServerIncrement}`,
+                    port: n_port,
                     database: 'clustertest'
                 }).promise();
                 // Retry the query
-                const [rows] = await pool.query("SELECT * FROM appointment");
-                return rows;
+                return await databaseGetAppointments();
             } catch (error) {
-                console.error("Error occurred while retrying with userServer1 and port 20049:", error.message);
+                console.error(`Error occurred while retrying with userServer${userServerIncrement} and port ${n_port}:`, error.message);
                 throw error;
             }
         } 
