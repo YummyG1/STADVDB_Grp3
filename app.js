@@ -2,7 +2,7 @@ import express from 'express'
 import {databaseGetAppointments, createAppointment, 
         updateAppointment, searchAppointments, 
         deleteAppointment, getLocationData,
-        getVirtualData, getAgeDemographicsData} from './database.js'
+        getVirtualData, getAgeDemographicsData, fetchAppointment} from './database.js'
 
 const app = express()
 app.set("view engine", "ejs")
@@ -50,8 +50,7 @@ app.get("/appointmentsAdd", (req, res) => {
 app.post("/appointmentsAdd", async (req, res) => {
     try {
         // Extract data from the form submission
-        const { pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual } = req.body
-        const version = 0;
+        const { pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, version=0 } = req.body
         await createAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, version)
         res.redirect("/appointments") 
     } catch (error) {
@@ -65,8 +64,17 @@ app.post("/appointmentsAdd", async (req, res) => {
     }
 })
 
-app.get("/appointmentsUpdate", (req, res) => {
-    res.render("appointmentsUpdate.ejs") // Replace with actual EJS file for updating appointments
+app.get("/appointmentsUpdate/:apptid", async (req, res) => {
+    try {
+        const { apptid } = req.params;
+        const appointment = await fetchAppointment(apptid);
+
+        // Replace with actual EJS file for updating appointments
+        res.render("appointmentsUpdate.ejs", { appointment });
+    } catch (error) {
+        console.error("Error occurred:", error);
+        res.status(500).send("Internal server error");
+    }
 })
 
 // Route to handle the update of an existing appointment
