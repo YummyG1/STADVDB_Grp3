@@ -90,8 +90,7 @@ app.post("/appointmentsUpdate", async (req, res) => {
 
 // Route to display the form for adding a new appointment
 app.get("/appointmentsDelete", (req, res) => {
-    const version = req.query.version || 0;
-    res.render("appointmentsDelete.ejs", {version}) // Replace with actual EJS file for adding appointments
+    res.render("appointmentsDelete.ejs") // Replace with actual EJS file for adding appointments
 })
 
 // Route to handle the submission of the form for adding new appointments
