@@ -117,7 +117,7 @@ app.get("/reportGeneration", async (req, res) => {
         //console.log(age)
 
         const locationString = location.map(item => `${item.RegionName} in ${item.City} has ${item.NumberOfAppointments} appointments`).join('<br> ');
-        const virtualString = virtual.map(item => `${item.Virtual ? item.Virtual : "No Preference"} appointments: ${item.NumberOfAppointments}`).join('<br>');
+        const virtualString = virtual.map(item => `${item.Virtual ? item.Virtual : "No Preference"} for virtual appointments: ${item.NumberOfAppointments}`).join('<br>');
         const ageString = age.map(item => `${item.AgeGroup} - ${item.NumberOfPx} patients`).join('<br> ');
 
         res.render("reportGeneration", {
