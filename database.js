@@ -5,7 +5,8 @@ let poolConfig = {
     host: 'ccscloud.dlsu.edu.ph',
     user: 'mainManager',
     port: n_port,
-    database: 'clustertest'
+    database: 'clustertest',
+    multipleStatements: true
 };
 let pool = mysql.createPool(poolConfig).promise();
 
@@ -35,7 +36,8 @@ export async function databaseGetAppointments(){
                         host: 'ccscloud.dlsu.edu.ph',
                         user: `mainManager`,
                         port: n_port,
-                        database: 'clustertest'
+                        database: 'clustertest',
+                        multipleStatements: true
                     }
                     pool = mysql.createPool(poolConfig).promise();
                 }
@@ -44,7 +46,8 @@ export async function databaseGetAppointments(){
                         host: 'ccscloud.dlsu.edu.ph',
                         user: `userServer${userServerIncrement}`,
                         port: n_port,
-                        database: 'clustertest'
+                        database: 'clustertest',
+                        multipleStatements: true
                     }
                     pool = mysql.createPool(poolConfig).promise();
                 }
@@ -65,6 +68,7 @@ export async function databaseGetAppointments(){
 
 // CREATE FUNCTIONS
 export async function createAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, version) {
+    
     try {
         const result = await pool.query(`
             SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
@@ -88,7 +92,8 @@ export async function createAppointment(pxid, clinicid, doctorid, apptid, status
                         host: 'ccscloud.dlsu.edu.ph',
                         user: `mainManager`,
                         port: n_port,
-                        database: 'clustertest'
+                        database: 'clustertest',
+                        multipleStatements: true
                     }
                     pool = mysql.createPool(poolConfig).promise();
                 }
@@ -97,7 +102,8 @@ export async function createAppointment(pxid, clinicid, doctorid, apptid, status
                         host: 'ccscloud.dlsu.edu.ph',
                         user: `userServer${userServerIncrement}`,
                         port: n_port,
-                        database: 'clustertest'
+                        database: 'clustertest',
+                        multipleStatements: true
                     }
                     pool = mysql.createPool(poolConfig).promise();
                 }
@@ -140,7 +146,7 @@ export async function updateAppointment(pxid, clinicid, doctorid, apptid, status
             START TRANSACTION;
             UPDATE appointment 
             SET pxid = ?, clinicid = ?, doctorid = ?, status = ?, TimeQueued = ?, QueueDate = ?, StartTime = ?, EndTime = ?, type = ?, \`Virtual\` = ?, version = version+1
-            WHERE apptid = ? AND version = ?
+            WHERE apptid = ? AND version = ?;
             COMMIT;`, [pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, apptid, version]);
 
         if (result.affectedRows === 0) {
@@ -163,7 +169,8 @@ export async function updateAppointment(pxid, clinicid, doctorid, apptid, status
                         host: 'ccscloud.dlsu.edu.ph',
                         user: `mainManager`,
                         port: n_port,
-                        database: 'clustertest'
+                        database: 'clustertest',
+                        multipleStatements: true
                     }
                     pool = mysql.createPool(poolConfig).promise();
                 }
@@ -172,7 +179,8 @@ export async function updateAppointment(pxid, clinicid, doctorid, apptid, status
                         host: 'ccscloud.dlsu.edu.ph',
                         user: `userServer${userServerIncrement}`,
                         port: n_port,
-                        database: 'clustertest'
+                        database: 'clustertest',
+                        multipleStatements: true
                     }
                     pool = mysql.createPool(poolConfig).promise();
                 }
@@ -202,10 +210,11 @@ export async function searchAppointments(apptid) {
             SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
             START TRANSACTION;
             SELECT * FROM appointment 
-            WHERE apptid LIKE ?
+            WHERE apptid LIKE ? ;
             COMMIT;`, [`%${apptid}%`]); // Use placeholders for query parameters
 
         // Return the search results
+        console.log(rows)
         return rows;
     } catch (error) {
         console.error("Error occurred:", error.message);
@@ -223,7 +232,8 @@ export async function searchAppointments(apptid) {
                         host: 'ccscloud.dlsu.edu.ph',
                         user: `mainManager`,
                         port: n_port,
-                        database: 'clustertest'
+                        database: 'clustertest',
+                        multipleStatements: true
                     }
                     pool = mysql.createPool(poolConfig).promise();
                 }
@@ -232,7 +242,8 @@ export async function searchAppointments(apptid) {
                         host: 'ccscloud.dlsu.edu.ph',
                         user: `userServer${userServerIncrement}`,
                         port: n_port,
-                        database: 'clustertest'
+                        database: 'clustertest',
+                        multipleStatements: true
                     }
                     pool = mysql.createPool(poolConfig).promise();
                 }
