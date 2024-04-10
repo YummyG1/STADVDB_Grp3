@@ -1,7 +1,7 @@
 import express from 'express'
 import {databaseGetAppointments, createAppointment, 
         updateAppointment, searchAppointments, 
-        deleteAppointment} from './database.js'
+        deleteAppointment, reportGeneration} from './database.js'
 
 const app = express()
 app.set("view engine", "ejs")
@@ -107,39 +107,25 @@ app.post("/appointmentsDelete", async (req, res) => {
     }
 })
 
-app.get("/reportGeneration", (req, res) => {
-    res.render("reportGeneration.ejs")
-})
-
 app.get("/reportGeneration", async (req, res) => {
-    /* TODO: FIX THE STUFF BELOW FOR PROPER IMPLEMENTATION OF REPORT GENERATION HOME PAGE
     try {
-        let results;
+        // Generate the report data
+        const results = await reportGeneration();
 
-        // Check if a search term is present in the query parameters
-        const searchTerm = req.query.searchTerm;
-        if (searchTerm) {
-            // If search term is present, perform search
-            results = await searchAppointments(searchTerm);
-        } else {
-            // If no search term, retrieve all appointments
-            results = await databaseGetAppointments();
-        }
-
-        // Render the appointment.ejs template with the results
-        res.render("appointment.ejs", { results });
+        // Pass the report data to the EJS file for rendering
+        res.render("reportGeneration.ejs", { results });
     } catch (error) {
-        console.error("Error occurred:", error);
-        res.status(500).send("Internal server error");
+        // Handle errors by sending an error response or rendering an error page
+        console.error("Error generating report:", error);
+        res.status(500).send("Error generating report.");
     }
-    */
-});
+})
 
 app.use((err, req, res, next) => {
     console.error(err.stack)
     res.status(500).send('Something is not working')
 })
 
-app.listen(3000,()=> {
-    console.log('Server running')
-})
+app.listen(process.env.PORT || 3000, () => {
+    console.log('Server running');
+  })

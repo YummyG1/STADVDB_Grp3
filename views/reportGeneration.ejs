@@ -13,11 +13,18 @@
 
     <br>
     
-    <button>Number of appointments per location</button>  
+    <span>Number of appointments per location: 
+        <%= results.location  %>
+    </span>  
     <br>
-    <button>Comparison of true and false virtual appointments</button>
+    <span>Comparison of true and false virtual appointments: </span>
+    <%= results.virtual %>
     <br>
-    <button>Age demographics</button>
+    <span>Age demographics: 
+        <%= results.age %>
+    </span>
+
+    <a href="../appointments"><button>Go Back</button></a>
 
 </body>
 </html>
