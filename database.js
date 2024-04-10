@@ -107,7 +107,7 @@ export async function createAppointment(pxid, clinicid, doctorid, apptid, status
                 console.log("Port:", poolConfig.port);
                 console.log("Database:", poolConfig.database);
                 // Retry the query
-                return await createAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual);
+                return await createAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, version);
             } catch (error) {
                 console.error(`Error occurred while retrying with userServer${userServerIncrement} and port ${n_port}:`, error.message);
                 throw error;
@@ -121,17 +121,15 @@ export async function deleteAppointment(pxid, clinicid, doctorid, apptid, status
         const result = await pool.query(`
             SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
             START TRANSACTION;
-            DELETE FROM appointment WHERE apptid=?;
-            COMMIT;`, [pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual])
+            DELETE FROM appointment WHERE apptid=? AND version=?;
+            COMMIT;`, [pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, version])
     } catch (error) {
         console.error("Error in deleteAppointment function:", error)
         throw error
     }
 }
 
-export async function incVersionAppointment(apptid, version){
-    const version = await pool.query('SELECT * FROM appointment WHERE apptid=? AND version SET version = version+1;', [apptid, version])
-}
+
 // UPDATE FUNCTIONS
 
 export async function updateAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, version) {
@@ -142,8 +140,8 @@ export async function updateAppointment(pxid, clinicid, doctorid, apptid, status
             START TRANSACTION;
             UPDATE appointment 
             SET pxid = ?, clinicid = ?, doctorid = ?, status = ?, TimeQueued = ?, QueueDate = ?, StartTime = ?, EndTime = ?, type = ?, \`Virtual\` = ?, version = version+1
-            WHERE apptid = ?
-            COMMIT;`, [pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, apptid]);
+            WHERE apptid = ? AND version = ?
+            COMMIT;`, [pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, apptid, version]);
 
         if (result.affectedRows === 0) {
             throw new Error(`Record with apptid ${apptid} not found or version mismatch.`);
