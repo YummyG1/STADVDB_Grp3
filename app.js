@@ -1,7 +1,8 @@
 import express from 'express'
 import {databaseGetAppointments, createAppointment, 
         updateAppointment, searchAppointments, 
-        deleteAppointment, reportGeneration} from './database.js'
+        deleteAppointment, getLocationData,
+        getVirtualData, getAgeDemographicsData} from './database.js'
 
 const app = express()
 app.set("view engine", "ejs")
@@ -109,17 +110,27 @@ app.post("/appointmentsDelete", async (req, res) => {
 
 app.get("/reportGeneration", async (req, res) => {
     try {
-        // Generate the report data
-        const results = await reportGeneration();
+        const location = await getLocationData();
+        const virtual = await getVirtualData();
+        //console.log(virtual)
+        const age = await getAgeDemographicsData();
+        //console.log(age)
 
-        // Pass the report data to the EJS file for rendering
-        res.render("reportGeneration.ejs", { results });
+        const locationString = location.map(item => `${item.RegionName} in ${item.City} has ${item.NumberOfAppointments} appointments`).join('<br> ');
+        const virtualString = virtual.map(item => `${item.Virtual ? item.Virtual : "No Preference"} appointments: ${item.NumberOfAppointments}`).join('<br>');
+        const ageString = age.map(item => `${item.AgeGroup} - ${item.NumberOfPx} patients`).join('<br> ');
+
+        res.render("reportGeneration", {
+            location: locationString,
+            virtual: virtualString,
+            age: ageString
+        });
     } catch (error) {
-        // Handle errors by sending an error response or rendering an error page
-        console.error("Error generating report:", error);
-        res.status(500).send("Error generating report.");
+        console.error("Error occurred in /reportGeneration route:", error);
+        res.status(500).send("Internal server error");
     }
-})
+});
+
 
 app.use((err, req, res, next) => {
     console.error(err.stack)

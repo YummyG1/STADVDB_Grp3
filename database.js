@@ -98,55 +98,57 @@ export async function searchAppointments(apptid) {
 
 // TODO: Add proper implementation for report generation function
 
-export async function reportGeneration() {
-    let locationData, virtualData, ageDemographicsData
-
+export async function getLocationData() {
     try {
-        // Number of appointments based on location
-        locationData = await pool.query(`
+        const [locationData] = await pool.query(`
             SELECT c.RegionName, c.City, COUNT(a.apptid) AS NumberOfAppointments
             FROM appointment a
             JOIN clinics c ON a.clinicid = c.clinicid
             GROUP BY c.RegionName, c.City;
-        `)
-        console.log(locationData)
+        `);
+        //console.log(locationData);
+        return locationData;
+    } catch (error) {
+        console.error("Error in getLocationData function:", error);
+        throw error;
+    }
+}
 
-        // Number of virtual true/false
-        virtualData = await pool.query(`
+export async function getVirtualData() {
+    try {
+        const [virtualData] = await pool.query(`
             SELECT \`Virtual\`, COUNT(apptid) AS NumberOfAppointments
             FROM appointment
             GROUP BY \`Virtual\`;
-        `)
-        console.log(virtualData)
-
-        // Age demographics
-        ageDemographicsData = await pool.query(`
-            SELECT 
-              CASE
-                WHEN p.age BETWEEN 0 AND 17 THEN '0-17'
-                WHEN p.age BETWEEN 18 AND 35 THEN '18-35'
-                WHEN p.age BETWEEN 36 AND 55 THEN '36-55'
-                WHEN p.age > 55 THEN '56+'
-                ELSE 'Unknown'
-              END AS AgeGroup,
-              COUNT(a.apptid) AS NumberOfAppointments
-            FROM appointment a
-            JOIN px p ON a.pxid = p.pxid
-            GROUP BY AgeGroup;
-        `)
-        console.log(ageDemographicsData)
-
-        // Storing the results in a tuple
-        const results = {
-            location: locationData,
-            virtual: virtualData,
-            age: ageDemographicsData
-        };
-
-        return results;
-
+        `);
+        //console.log(virtualData);
+        return virtualData;
     } catch (error) {
-        console.error("Error in reportGeneration function:", error);
+        console.error("Error in getVirtualData function:", error);
+        throw error;
+    }
+}
+
+export async function getAgeDemographicsData() {
+    try {
+        const [ageDemographicsData] = await pool.query(`
+        SELECT 
+        CASE
+            WHEN p.age BETWEEN 0 AND 17 THEN '0-17'
+            WHEN p.age BETWEEN 18 AND 35 THEN '18-35'
+            WHEN p.age BETWEEN 36 AND 55 THEN '36-55'
+            WHEN p.age > 55 THEN '56+'
+            ELSE 'Unknown'
+        END AS AgeGroup,
+        COUNT(p.pxid) AS NumberOfPx
+        FROM px p
+        GROUP BY AgeGroup;
+     
+        `);
+        //console.log(ageDemographicsData);
+        return ageDemographicsData;
+    } catch (error) {
+        console.error("Error in getAgeDemographicsData function:", error);
         throw error;
     }
 }

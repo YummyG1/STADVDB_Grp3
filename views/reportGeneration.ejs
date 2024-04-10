@@ -13,16 +13,22 @@
 
     <br>
     
-    <span>Number of appointments per location: 
-        <%= results.location  %>
-    </span>  
-    <br>
-    <span>Comparison of true and false virtual appointments: </span>
-    <%= results.virtual %>
-    <br>
-    <span>Age demographics: 
-        <%= results.age %>
-    </span>
+    <div>
+        <h4>Number of Appointments per Location</h2>
+        <p><%- location %></p>
+        <br>
+    </div>
+    <div>
+        <h4>Comparison of True and False Virtual Appointments</h2>
+        <p><%- virtual %></p>
+        <br>
+    </div>
+    <div>
+        <h4>Age Demographics</h2>
+        <p><%- age %></p>
+        <br>
+    </div>
+    
 
     <a href="../appointments"><button>Go Back</button></a>
 
