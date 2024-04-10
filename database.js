@@ -1,16 +1,22 @@
 import mysql from 'mysql2'
 let n_port = 20048;
 let userServerIncrement = 0;
-let pool = mysql.createPool({
+let poolConfig = {
     host: 'ccscloud.dlsu.edu.ph',
     user: 'mainManager',
     port: n_port,
     database: 'clustertest'
-}).promise();
+};
+let pool = mysql.createPool(poolConfig).promise();
 
 export async function databaseGetAppointments(){
     try {
-        console.log(pool)
+        console.log("Pool Configuration:");
+        console.log("Host:", poolConfig.host);
+        console.log("User:", poolConfig.user);
+        console.log("Port:", poolConfig.port);
+        console.log("Database:", poolConfig.database);
+
         const [rows] = await pool.query("SELECT * FROM appointment");
         return rows;
     } catch (error) {
@@ -25,23 +31,28 @@ export async function databaseGetAppointments(){
                 if(n_port == 20051){
                     n_port = 20048
                     userServerIncrement = 0
-                    pool = mysql.createPool({
+                    poolConfig = {
                         host: 'ccscloud.dlsu.edu.ph',
                         user: `mainManager`,
                         port: n_port,
                         database: 'clustertest'
-                    }).promise();
-                    console.log(pool)
+                    }
+                    pool = mysql.createPool(poolConfig).promise();
                 }
                 else{
-                    pool = mysql.createPool({
+                    poolConfig = {
                         host: 'ccscloud.dlsu.edu.ph',
                         user: `userServer${userServerIncrement}`,
                         port: n_port,
                         database: 'clustertest'
-                    }).promise();
-                    console.log(pool)
+                    }
+                    pool = mysql.createPool(poolConfig).promise();
                 }
+                console.log("Pool Configuration:");
+                console.log("Host:", poolConfig.host);
+                console.log("User:", poolConfig.user);
+                console.log("Port:", poolConfig.port);
+                console.log("Database:", poolConfig.database);
                 // Retry the query
                 return await databaseGetAppointments();
             } catch (error) {
@@ -70,23 +81,28 @@ export async function createAppointment(pxid, clinicid, doctorid, apptid, status
                 if(n_port == 20051){
                     n_port = 20048
                     userServerIncrement = 0
-                    pool = mysql.createPool({
+                    poolConfig = {
                         host: 'ccscloud.dlsu.edu.ph',
                         user: `mainManager`,
                         port: n_port,
                         database: 'clustertest'
-                    }).promise();
-                    console.log(pool)
+                    }
+                    pool = mysql.createPool(poolConfig).promise();
                 }
                 else{
-                    pool = mysql.createPool({
+                    poolConfig = {
                         host: 'ccscloud.dlsu.edu.ph',
                         user: `userServer${userServerIncrement}`,
                         port: n_port,
                         database: 'clustertest'
-                    }).promise();
-                    console.log(pool)
+                    }
+                    pool = mysql.createPool(poolConfig).promise();
                 }
+                console.log("Pool Configuration:");
+                console.log("Host:", poolConfig.host);
+                console.log("User:", poolConfig.user);
+                console.log("Port:", poolConfig.port);
+                console.log("Database:", poolConfig.database);
                 // Retry the query
                 return await createAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual);
             } catch (error) {
@@ -133,23 +149,28 @@ export async function updateAppointment(pxid, clinicid, doctorid, apptid, status
                 if(n_port == 20051){
                     n_port = 20048
                     userServerIncrement = 0
-                    pool = mysql.createPool({
+                    poolConfig = {
                         host: 'ccscloud.dlsu.edu.ph',
                         user: `mainManager`,
                         port: n_port,
                         database: 'clustertest'
-                    }).promise();
-                    console.log(pool)
+                    }
+                    pool = mysql.createPool(poolConfig).promise();
                 }
                 else{
-                    pool = mysql.createPool({
+                    poolConfig = {
                         host: 'ccscloud.dlsu.edu.ph',
                         user: `userServer${userServerIncrement}`,
                         port: n_port,
                         database: 'clustertest'
-                    }).promise();
-                    console.log(pool)
+                    }
+                    pool = mysql.createPool(poolConfig).promise();
                 }
+                console.log("Pool Configuration:");
+                console.log("Host:", poolConfig.host);
+                console.log("User:", poolConfig.user);
+                console.log("Port:", poolConfig.port);
+                console.log("Database:", poolConfig.database);
                 // Retry the query
                 return await updateAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual);
             } catch (error) {
@@ -185,23 +206,28 @@ export async function searchAppointments(apptid) {
                 if(n_port == 20051){
                     n_port = 20048
                     userServerIncrement = 0
-                    pool = mysql.createPool({
+                    poolConfig = {
                         host: 'ccscloud.dlsu.edu.ph',
                         user: `mainManager`,
                         port: n_port,
                         database: 'clustertest'
-                    }).promise();
-                    console.log(pool)
+                    }
+                    pool = mysql.createPool(poolConfig).promise();
                 }
                 else{
-                    pool = mysql.createPool({
+                    poolConfig = {
                         host: 'ccscloud.dlsu.edu.ph',
                         user: `userServer${userServerIncrement}`,
                         port: n_port,
                         database: 'clustertest'
-                    }).promise();
-                    console.log(pool)
+                    }
+                    pool = mysql.createPool(poolConfig).promise();
                 }
+                console.log("Pool Configuration:");
+                console.log("Host:", poolConfig.host);
+                console.log("User:", poolConfig.user);
+                console.log("Port:", poolConfig.port);
+                console.log("Database:", poolConfig.database);
                 // Retry the query
                 return await searchAppointments(apptid);
             } catch (error) {
