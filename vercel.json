@@ -1,0 +1,13 @@
+{
+    "builds": [
+      {
+        "src": "package.json",
+        "use": "@vercel/node",
+        "config": { "includeFiles": ["public/**", "views/**"] }
+      }
+    ],
+    "routes": [
+      { "src": "/(.*)", "dest": "/" }
+    ]
+  }
+  
