@@ -18,8 +18,9 @@
     <form action="/appointmentsDelete" method="post">
         <label for="apptid">Appointment ID:</label>
         <input type="text" id="apptid" name="apptid">
+        <input type="hidden" name="version" value = "<%= version %>">
         <input type="submit" value="Submit">
-      </form>
+    </form>
 
     <br>
 

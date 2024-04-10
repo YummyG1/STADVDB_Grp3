@@ -51,7 +51,8 @@ app.post("/appointmentsAdd", async (req, res) => {
     try {
         // Extract data from the form submission
         const { pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual } = req.body
-        await createAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual)
+        const version = 0;
+        await createAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, version)
         res.redirect("/appointments") 
     } catch (error) {
         if (error.code === 'ER_DUP_ENTRY') {
@@ -94,8 +95,9 @@ app.get("/appointmentsDelete", (req, res) => {
 app.post("/appointmentsDelete", async (req, res) => {
     try {
         // Extract data from the form submission
-        const { apptid } = req.body
-        await deleteAppointment(apptid)
+        const { apptid, version } = req.body
+        await deleteAppointment(apptid, version)
+        await incVersionAppointment(apptid, version)
         res.redirect("/appointments") 
     } catch (error) {
         if (error.code === 'ER_DUP_ENTRY') {
@@ -117,7 +119,7 @@ app.get("/reportGeneration", async (req, res) => {
         //console.log(age)
 
         const locationString = location.map(item => `${item.RegionName} in ${item.City} has ${item.NumberOfAppointments} appointments`).join('<br> ');
-        const virtualString = virtual.map(item => `${item.Virtual ? item.Virtual : "No Preference"} for virtual appointments: ${item.NumberOfAppointments}`).join('<br>');
+        const virtualString = virtual.map(item => `${item.Virtual ? item.Virtual : "No Preference"} appointments: ${item.NumberOfAppointments}`).join('<br>');
         const ageString = age.map(item => `${item.AgeGroup} - ${item.NumberOfPx} patients`).join('<br> ');
 
         res.render("reportGeneration", {

@@ -64,11 +64,11 @@ export async function databaseGetAppointments(){
 }
 
 // CREATE FUNCTIONS
-export async function createAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual) {
+export async function createAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, version) {
     try {
         const result = await pool.query(`
-            INSERT INTO appointment (pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type,  \`Virtual\`)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual])
+            INSERT INTO appointment (pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type,  \`Virtual\`, version)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, version])
     } catch (error) {
         console.error("Error occurred:", error.message);
         // Handle connection error and reconfigure pool
@@ -113,7 +113,7 @@ export async function createAppointment(pxid, clinicid, doctorid, apptid, status
     }   
 }
 
-export async function deleteAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual) {
+export async function deleteAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, version) {
     try {
         const result = await pool.query(`
             DELETE FROM appointment WHERE apptid=?;`, [pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual])
@@ -123,6 +123,9 @@ export async function deleteAppointment(pxid, clinicid, doctorid, apptid, status
     }
 }
 
+export async function incVersionAppointment(apptid, version){
+    const version = await pool.query('SELECT * FROM appointment WHERE apptid=? AND version SET version = version+1;', [apptid, version])
+}
 // UPDATE FUNCTIONS
 
 export async function updateAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual) {
