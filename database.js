@@ -10,6 +10,7 @@ let pool = mysql.createPool({
 
 export async function databaseGetAppointments(){
     try {
+        console.log(pool)
         const [rows] = await pool.query("SELECT * FROM appointment");
         return rows;
     } catch (error) {
@@ -21,12 +22,26 @@ export async function databaseGetAppointments(){
                 // Attempt reconfiguration with userServer1 and port 20049
                 userServerIncrement++;
                 n_port++;
-                pool = mysql.createPool({
-                    host: 'ccscloud.dlsu.edu.ph',
-                    user: `userServer${userServerIncrement}`,
-                    port: n_port,
-                    database: 'clustertest'
-                }).promise();
+                if(n_port == 20051){
+                    n_port = 20048
+                    userServerIncrement = 0
+                    pool = mysql.createPool({
+                        host: 'ccscloud.dlsu.edu.ph',
+                        user: `mainManager`,
+                        port: n_port,
+                        database: 'clustertest'
+                    }).promise();
+                    console.log(pool)
+                }
+                else{
+                    pool = mysql.createPool({
+                        host: 'ccscloud.dlsu.edu.ph',
+                        user: `userServer${userServerIncrement}`,
+                        port: n_port,
+                        database: 'clustertest'
+                    }).promise();
+                    console.log(pool)
+                }
                 // Retry the query
                 return await databaseGetAppointments();
             } catch (error) {
@@ -44,9 +59,42 @@ export async function createAppointment(pxid, clinicid, doctorid, apptid, status
             INSERT INTO appointment (pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type,  \`Virtual\`)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual])
     } catch (error) {
-        console.error("Error in createAppointment function:", error)
-        throw error
-    }
+        console.error("Error occurred:", error.message);
+        // Handle connection error and reconfigure pool
+        if (error.code === 'PROTOCOL_CONNECTION_LOST' || error.code === 'ETIMEDOUT') {
+            console.log("Reconfiguring pool...");
+            try {
+                // Attempt reconfiguration with userServer1 and port 20049
+                userServerIncrement++;
+                n_port++;
+                if(n_port == 20051){
+                    n_port = 20048
+                    userServerIncrement = 0
+                    pool = mysql.createPool({
+                        host: 'ccscloud.dlsu.edu.ph',
+                        user: `mainManager`,
+                        port: n_port,
+                        database: 'clustertest'
+                    }).promise();
+                    console.log(pool)
+                }
+                else{
+                    pool = mysql.createPool({
+                        host: 'ccscloud.dlsu.edu.ph',
+                        user: `userServer${userServerIncrement}`,
+                        port: n_port,
+                        database: 'clustertest'
+                    }).promise();
+                    console.log(pool)
+                }
+                // Retry the query
+                return await createAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual);
+            } catch (error) {
+                console.error(`Error occurred while retrying with userServer${userServerIncrement} and port ${n_port}:`, error.message);
+                throw error;
+            }
+        }
+    }   
 }
 
 export async function deleteAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual) {
@@ -74,6 +122,41 @@ export async function updateAppointment(pxid, clinicid, doctorid, apptid, status
         }
         return result;
     } catch (error) {
+        console.error("Error occurred:", error.message);
+        // Handle connection error and reconfigure pool
+        if (error.code === 'PROTOCOL_CONNECTION_LOST' || error.code === 'ETIMEDOUT') {
+            console.log("Reconfiguring pool...");
+            try {
+                // Attempt reconfiguration with userServer1 and port 20049
+                userServerIncrement++;
+                n_port++;
+                if(n_port == 20051){
+                    n_port = 20048
+                    userServerIncrement = 0
+                    pool = mysql.createPool({
+                        host: 'ccscloud.dlsu.edu.ph',
+                        user: `mainManager`,
+                        port: n_port,
+                        database: 'clustertest'
+                    }).promise();
+                    console.log(pool)
+                }
+                else{
+                    pool = mysql.createPool({
+                        host: 'ccscloud.dlsu.edu.ph',
+                        user: `userServer${userServerIncrement}`,
+                        port: n_port,
+                        database: 'clustertest'
+                    }).promise();
+                    console.log(pool)
+                }
+                // Retry the query
+                return await updateAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual);
+            } catch (error) {
+                console.error(`Error occurred while retrying with userServer${userServerIncrement} and port ${n_port}:`, error.message);
+                throw error;
+            }
+        }
         console.error("Error in updateAppointment function:", error);
         throw error;
     }
@@ -91,8 +174,41 @@ export async function searchAppointments(apptid) {
         // Return the search results
         return rows;
     } catch (error) {
-        console.error("Error in searchAppointments function:", error);
-        throw error;
+        console.error("Error occurred:", error.message);
+        // Handle connection error and reconfigure pool
+        if (error.code === 'PROTOCOL_CONNECTION_LOST' || error.code === 'ETIMEDOUT') {
+            console.log("Reconfiguring pool...");
+            try {
+                // Attempt reconfiguration with userServer1 and port 20049
+                userServerIncrement++;
+                n_port++;
+                if(n_port == 20051){
+                    n_port = 20048
+                    userServerIncrement = 0
+                    pool = mysql.createPool({
+                        host: 'ccscloud.dlsu.edu.ph',
+                        user: `mainManager`,
+                        port: n_port,
+                        database: 'clustertest'
+                    }).promise();
+                    console.log(pool)
+                }
+                else{
+                    pool = mysql.createPool({
+                        host: 'ccscloud.dlsu.edu.ph',
+                        user: `userServer${userServerIncrement}`,
+                        port: n_port,
+                        database: 'clustertest'
+                    }).promise();
+                    console.log(pool)
+                }
+                // Retry the query
+                return await searchAppointments(apptid);
+            } catch (error) {
+                console.error(`Error occurred while retrying with userServer${userServerIncrement} and port ${n_port}:`, error.message);
+                throw error;
+            }
+        }
     }
 }
 
