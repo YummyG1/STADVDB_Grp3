@@ -207,11 +207,8 @@ export async function searchAppointments(apptid) {
     try {
         // Construct and execute the SQL query with the search term
         const [rows] = await pool.query(`
-            SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
-            START TRANSACTION;
             SELECT * FROM appointment 
-            WHERE apptid LIKE ? ;
-            COMMIT;`, [`%${apptid}%`]); // Use placeholders for query parameters
+            WHERE apptid LIKE ? ;`, [`%${apptid}%`]); // Use placeholders for query parameters
 
         // Return the search results
         console.log(rows)
