@@ -2,7 +2,7 @@ import express from 'express'
 import {databaseGetAppointments, createAppointment, 
         updateAppointment, searchAppointments, 
         deleteAppointment, getLocationData,
-        getVirtualData, getAgeDemographicsData, fetchAppointment} from './database.js'
+        getVirtualData, getAgeDemographicsData} from './database.js'
 
 const app = express()
 app.set("view engine", "ejs")
@@ -43,7 +43,8 @@ app.get("/appointments", async (req, res) => {
 
 // Route to display the form for adding a new appointment
 app.get("/appointmentsAdd", (req, res) => {
-    res.render("appointmentsAdd.ejs") // Replace with actual EJS file for adding appointments
+    const version = req.query.version || 0; 
+    res.render("appointmentsAdd.ejs", {version}) // Replace with actual EJS file for adding appointments
 })
 
 // Route to handle the submission of the form for adding new appointments
@@ -64,17 +65,11 @@ app.post("/appointmentsAdd", async (req, res) => {
     }
 })
 
-app.get("/appointmentsUpdate/:apptid", async (req, res) => {
-    try {
-        const { apptid } = req.params;
-        const appointment = await fetchAppointment(apptid);
+app.get("/appointmentsUpdate", (req, res) => {
+    const version = req.query.version || 0; 
+    // Replace with actual EJS file for updating appointments
+    res.render("appointmentsUpdate.ejs", {version});
 
-        // Replace with actual EJS file for updating appointments
-        res.render("appointmentsUpdate.ejs", { appointment });
-    } catch (error) {
-        console.error("Error occurred:", error);
-        res.status(500).send("Internal server error");
-    }
 })
 
 // Route to handle the update of an existing appointment
@@ -96,7 +91,8 @@ app.post("/appointmentsUpdate", async (req, res) => {
 
 // Route to display the form for adding a new appointment
 app.get("/appointmentsDelete", (req, res) => {
-    res.render("appointmentsDelete.ejs") // Replace with actual EJS file for adding appointments
+    const version = req.query.version || 0;
+    res.render("appointmentsDelete.ejs", {version}) // Replace with actual EJS file for adding appointments
 })
 
 // Route to handle the submission of the form for adding new appointments

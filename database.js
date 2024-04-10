@@ -316,17 +316,3 @@ export async function getAgeDemographicsData() {
     }
 }
 
-export async function fetchAppointment(apptid){
-    try {
-        const [rows] = await pool.query('SELECT * FROM appointment WHERE apptid = ?', [apptid]);
-        if (rows.length > 0) {
-            return rows[0];
-        } else {
-            throw new Error(`Appointment with ID ${apptid} not found`);
-        }
-    } catch (error) {
-        console.error('Error fetching appointment:', error);
-        throw error;
-    }
-}
-
