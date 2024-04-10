@@ -128,7 +128,7 @@ export async function incVersionAppointment(apptid, version){
 }
 // UPDATE FUNCTIONS
 
-export async function updateAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual) {
+export async function updateAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, version) {
     try {
         console.log(apptid)
         const result = await pool.query(`
@@ -137,7 +137,7 @@ export async function updateAppointment(pxid, clinicid, doctorid, apptid, status
             WHERE apptid = ?`, [pxid, clinicid, doctorid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, apptid]);
 
         if (result.affectedRows === 0) {
-            throw new Error(`Record with apptid ${apptid} not found.`);
+            throw new Error(`Record with apptid ${apptid} not found or version mismatch.`);
         }
         return result;
     } catch (error) {

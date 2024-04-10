@@ -73,10 +73,10 @@ app.get("/appointmentsUpdate", (req, res) => {
 app.post("/appointmentsUpdate", async (req, res) => {
     try {
         // Extract data from the form submission
-        const { pxid, clinicid, doctorid, apptid,  status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual } = req.body
+        const { pxid, clinicid, doctorid, apptid,  status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, version } = req.body
         const updatedApptId = req.body.apptid;
-        const result = await updateAppointment(pxid, clinicid, doctorid, updatedApptId, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, updatedApptId);
-        
+        const result = await updateAppointment(pxid, clinicid, doctorid, updatedApptId, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, updatedApptId, version);
+
         // Check the result and provide appropriate response
         res.redirect("/appointments")
         
@@ -97,7 +97,6 @@ app.post("/appointmentsDelete", async (req, res) => {
         // Extract data from the form submission
         const { apptid, version } = req.body
         await deleteAppointment(apptid, version)
-        await incVersionAppointment(apptid, version)
         res.redirect("/appointments") 
     } catch (error) {
         if (error.code === 'ER_DUP_ENTRY') {
