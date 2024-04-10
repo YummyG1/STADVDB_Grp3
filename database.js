@@ -122,13 +122,13 @@ export async function createAppointment(pxid, clinicid, doctorid, apptid, status
     }   
 }
 
-export async function deleteAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, version) {
+export async function deleteAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual) {
     try {
         const result = await pool.query(`
             SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
             START TRANSACTION;
-            DELETE FROM appointment WHERE apptid=? AND version=?;
-            COMMIT;`, [pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, version])
+            DELETE FROM appointment WHERE apptid=?;
+            COMMIT;`, [pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual])
     } catch (error) {
         console.error("Error in deleteAppointment function:", error)
         throw error
@@ -264,13 +264,10 @@ export async function searchAppointments(apptid) {
 export async function getLocationData() {
     try {
         const [locationData] = await pool.query(`
-            SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
-            START TRANSACTION;
             SELECT c.RegionName, c.City, COUNT(a.apptid) AS NumberOfAppointments
             FROM appointment a
             JOIN clinics c ON a.clinicid = c.clinicid
             GROUP BY c.RegionName, c.City;
-            COMMIT;
         `);
         //console.log(locationData);
         return locationData;
@@ -283,17 +280,14 @@ export async function getLocationData() {
 export async function getVirtualData() {
     try {
         const [virtualData] = await pool.query(`
-            SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
-            START TRANSACTION;
             SELECT \`Virtual\`, COUNT(apptid) AS NumberOfAppointments
             FROM appointment
             GROUP BY \`Virtual\`;
-            COMMIT;
         `);
-        //console.log(virtualData);
+       console.log(virtualData);
         return virtualData;
     } catch (error) {
-        console.error("Error in getVirtualData function:", error);
+        //console.error("Error in getVirtualData function:", error);
         throw error;
     }
 }
@@ -301,8 +295,6 @@ export async function getVirtualData() {
 export async function getAgeDemographicsData() {
     try {
         const [ageDemographicsData] = await pool.query(`
-        SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
-        START TRANSACTION;
         SELECT 
         CASE
             WHEN p.age BETWEEN 0 AND 17 THEN '0-17'
@@ -314,7 +306,6 @@ export async function getAgeDemographicsData() {
         COUNT(p.pxid) AS NumberOfPx
         FROM px p
         GROUP BY AgeGroup;
-        COMMIT;
         `);
         //console.log(ageDemographicsData);
         return ageDemographicsData;

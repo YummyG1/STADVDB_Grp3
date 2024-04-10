@@ -67,7 +67,6 @@ app.post("/appointmentsAdd", async (req, res) => {
 
 app.get("/appointmentsUpdate", (req, res) => {
     const version = req.query.version || 0; 
-    // Replace with actual EJS file for updating appointments
     res.render("appointmentsUpdate.ejs", {version});
 
 })
@@ -78,7 +77,7 @@ app.post("/appointmentsUpdate", async (req, res) => {
         // Extract data from the form submission
         const { pxid, clinicid, doctorid, apptid,  status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, version } = req.body
         const updatedApptId = req.body.apptid;
-        const result = await updateAppointment(pxid, clinicid, doctorid, updatedApptId, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, updatedApptId, version);
+        const result = await updateAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual, version);
 
         // Check the result and provide appropriate response
         res.redirect("/appointments")
@@ -99,19 +98,14 @@ app.get("/appointmentsDelete", (req, res) => {
 app.post("/appointmentsDelete", async (req, res) => {
     try {
         // Extract data from the form submission
-        const { apptid, version } = req.body
-        await deleteAppointment(apptid, version)
+        const { apptid} = req.body
+        await deleteAppointment(apptid)
         res.redirect("/appointments") 
     } catch (error) {
-        if (error.code === 'ER_DUP_ENTRY') {
-            console.error("Duplicate entry error:", error)
-            res.status(400).send("Error: Duplicate entry. This ID already exists.")    
-        } else {
-            console.error("Error occurred:", error)
-            res.status(500).send("Internal server error")
+        console.error("Error occurred:", error)
+        res.status(500).send("Internal server error")
         }
-    }
-})
+});
 
 app.get("/reportGeneration", async (req, res) => {
     try {
@@ -121,7 +115,7 @@ app.get("/reportGeneration", async (req, res) => {
         const age = await getAgeDemographicsData();
         //console.log(age)
 
-        const locationString = location.map(item => `${item.RegionName} in ${item.City} has ${item.NumberOfAppointments} appointments`).join('<br> ');
+        const locationString = location.map(item => `${item.City} in ${item.RegionName} has ${item.NumberOfAppointments} appointments`).join('<br> ');
         const virtualString = virtual.map(item => `${item.Virtual ? item.Virtual : "No Preference"} appointments: ${item.NumberOfAppointments}`).join('<br>');
         const ageString = age.map(item => `${item.AgeGroup} - ${item.NumberOfPx} patients`).join('<br> ');
 
