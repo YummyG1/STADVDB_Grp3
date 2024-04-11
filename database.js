@@ -133,7 +133,7 @@ export async function deleteAppointment(apptid) {
         const appointmentExists = checkResult[0].count > 0;
         
         if (!appointmentExists) {
-            throw new Error(`Appointment with ID ${apptid} does not exist`);
+            throw new Error(`Appointment with ID ${apptid} does not exist. No delete function was executed.`);
         }
 
         // If appointment exists, delete it
