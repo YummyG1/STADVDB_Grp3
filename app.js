@@ -110,7 +110,7 @@ app.post("/appointmentsDelete", async (req, res) => {
         console.error("Error occurred:", error);
         if (error.message.includes("does not exist")) {
             // Handle case where appointment doesn't exist
-            res.status(404).send("Appointment not found");
+            res.status(404).send("Appointment not found. Delete function not executed.");
         } else {
             // Handle other errors
             res.status(500).send("Internal server error");
