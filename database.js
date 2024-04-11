@@ -122,18 +122,29 @@ export async function createAppointment(pxid, clinicid, doctorid, apptid, status
     }   
 }
 
-export async function deleteAppointment(pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual) {
+export async function deleteAppointment(apptid) {
     try {
-        const result = await pool.query(`
+        // Check if appointment exists
+        const [checkResult] = await pool.query( `
             SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
             START TRANSACTION;
             DELETE FROM appointment WHERE apptid=?;
-            COMMIT;`, [pxid, clinicid, doctorid, apptid, status, TimeQueued, QueueDate, StartTime, EndTime, type, Virtual])
+            COMMIT;`, [apptid]);
+        const appointmentExists = checkResult[0].count > 0;
+        
+        if (!appointmentExists) {
+            throw new Error(`Appointment with ID ${apptid} does not exist`);
+        }
+
+        // If appointment exists, delete it
+        const [deleteResult] = await pool.query('DELETE FROM appointment WHERE apptid = ?', [apptid]);
+        return deleteResult;
     } catch (error) {
-        console.error("Error in deleteAppointment function:", error)
-        throw error
+        console.error("Error in deleteAppointment function:", error);
+        throw error;
     }
 }
+
 
 
 // UPDATE FUNCTIONS

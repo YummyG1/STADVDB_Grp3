@@ -97,14 +97,26 @@ app.get("/appointmentsDelete", (req, res) => {
 app.post("/appointmentsDelete", async (req, res) => {
     try {
         // Extract data from the form submission
-        const { apptid} = req.body
-        await deleteAppointment(apptid)
-        res.redirect("/appointments") 
-    } catch (error) {
-        console.error("Error occurred:", error)
-        res.status(500).send("Internal server error")
+        const { apptid } = req.body;
+        
+        // Check if appointment ID is provided
+        if (!apptid) {
+            return res.status(400).send("Appointment ID is required");
         }
-});
+
+        await deleteAppointment(apptid);
+        res.redirect("/appointments"); 
+    } catch (error) {
+        console.error("Error occurred:", error);
+        if (error.message.includes("does not exist")) {
+            // Handle case where appointment doesn't exist
+            res.status(404).send("Appointment not found");
+        } else {
+            // Handle other errors
+            res.status(500).send("Internal server error");
+        }
+    }
+})
 
 app.get("/reportGeneration", async (req, res) => {
     try {
